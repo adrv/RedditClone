@@ -1,0 +1,27 @@
+- model_class = Post
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human.pluralize.titleize
+- if can?(:create, Post)
+  = link_to t('.new', :default => t("helpers.links.new")), new_post_path, :class => 'btn btn-primary', style: 'margin-bottom: 20px;'
+- @posts.each do |post|
+  .comment
+    .row
+      .col-md-1{'data-id': "#{post.id}"}
+        %a.vote{ 'href': "#", 'data-vote': "like"} 
+          ↑ 
+        %br
+        %span.votes_count
+          = post.get_likes.size - post.get_dislikes.size
+        %br
+        %a.vote{ 'href': "#", 'data-vote': "bad"} 
+          ↓
+      .col-md-8
+        = link_to post_path(post) do
+          = post.content
+      .col-md-3
+        %small
+          %i=post.user.email
+        - if can?(:update, Post)
+          = link_to t('.edit', :default => t("helpers.links.edit")), edit_post_path(post), :class => 'btn btn-default btn-xs'
+        - if can?(:destroy, Post)
+          = link_to t('.destroy', :default => t("helpers.links.destroy")), post_path(post), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs btn-danger'

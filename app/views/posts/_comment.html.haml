@@ -1,0 +1,24 @@
+- if odd then odd = false else odd = true end
+%div{class: "comment #{odd ? 'comment--blue' : 'comment--white'}"}
+  .row
+    .col-lg-1{'data-id': "#{comment.id}"}
+      %a.vote{ 'href': "#", 'data-vote': "like"} 
+        ↑ 
+      %br
+      %span.votes_count
+        = comment.get_likes.size - comment.get_dislikes.size
+      %br
+      %a.vote{ 'href': "#", 'data-vote': "bad"} 
+        ↓
+    .col-lg-11.comment--content
+      = comment.content
+  %a{href: '#', class: 'expand-reply'}
+    %b
+      Reply
+  = simple_form_for Post.new do |f|
+    = f.input :content, label: false
+    = f.input :parent_id, as: :hidden, :input_html => { :value => comment.id }
+    = f.input :user_id, as: :hidden, :input_html => { :value => current_user.id }
+    = f.button :submit, class: 'btn-primary'
+  - if comment.children.length
+    = render partial: "comment", collection: comment.children, locals: {odd: odd}

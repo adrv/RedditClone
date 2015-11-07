@@ -1,0 +1,9 @@
+- @post ||= Post.new
+.col-lg-6
+  = simple_form_for @post, :html => { :class => 'form-horizontal' } do |f|
+    = f.input :content
+    = error_span(@post[:content])
+    = f.input :parent_id, as: :hidden, :input_html => { :value => nil }
+    = f.input :user_id, as: :hidden, :input_html => { :value => current_user.id }
+    = f.button :submit, :class => 'btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), posts_path, :class => 'btn btn-default'
